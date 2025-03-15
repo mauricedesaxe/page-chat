@@ -101,7 +101,7 @@ chrome.commands.onCommand.addListener(async (command) => {
 
       // Store the downloaded content
       await chrome.storage.local.set({
-        currentResponse: `Page downloaded successfully: ${pageContent.substring(0, 100)}...`,
+        currentResponse: pageContent,
         pageContent: pageContent,
         isLoading: false
       })
