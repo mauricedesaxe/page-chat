@@ -39,6 +39,12 @@ function IndexPopup() {
         if (changes.isLoading) {
           setIsLoading(changes.isLoading.newValue)
         }
+        if (changes.anthropicKey) {
+          setAnthropicKey(changes.anthropicKey.newValue)
+        }
+        if (changes.jinaKey) {
+          setJinaKey(changes.jinaKey.newValue)
+        }
       }
     }
 
