@@ -11,6 +11,7 @@ export function getAnthropicClient(apiKey: string) {
 
   // Create a new client instance each time to ensure we're using the latest key
   return new Anthropic({
-    apiKey
+    apiKey,
+    dangerouslyAllowBrowser: true
   })
 }
