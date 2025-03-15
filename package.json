@@ -1,8 +1,8 @@
 {
-  "name": "the-gist-of-it",
-  "displayName": "The Gist of It",
+  "name": "page-chat",
+  "displayName": "Page Chat",
   "version": "0.0.1",
-  "description": "Summarizes any selected text using AI.",
+  "description": "Chat with LLMs about your browser page.",
   "author": "Alex Lazar alex@leetsoftware.com",
   "scripts": {
     "dev": "plasmo dev",
