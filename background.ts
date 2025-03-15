@@ -56,11 +56,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         result.anthropicKey
       )
 
-      // Update storage with summary and clear loading state
-      await chrome.storage.local.set({
-        currentResponse: summary,
-        isLoading: false
-      })
+      await addNewResponse(summary)
     } catch (error) {
       console.error("Error generating response:", error)
       // Store error and clear loading state
@@ -100,11 +96,7 @@ chrome.commands.onCommand.addListener(async (command) => {
       const pageContent = await downloadPage(activeTab.url, result.jinaKey)
 
       // Store the downloaded content
-      await chrome.storage.local.set({
-        currentResponse: pageContent,
-        pageContent: pageContent,
-        isLoading: false
-      })
+      await addNewResponse(pageContent)
     } catch (error) {
       console.error("Error downloading page:", error)
       await chrome.storage.local.set({
@@ -126,4 +118,37 @@ async function openPopup() {
     // Show the extension's popup
     await chrome.action.openPopup()
   }
+}
+
+type HistoricalEntry = {
+  response: string
+  timestamp: string
+}
+
+/**
+ * Add a new response to the history list
+ * @param newResponse The new response to add
+ */
+async function addNewResponse(newResponse: string) {
+  // Get existing history and current response
+  const storage = await chrome.storage.local.get(["history", "currentResponse"])
+  let history: HistoricalEntry[] = storage.history || []
+
+  // If there's a current response, add it to history before replacing it
+  if (storage.currentResponse) {
+    history.push({
+      response: storage.currentResponse,
+      timestamp: new Date().toISOString()
+    })
+  }
+
+  console.log("newResponse", newResponse)
+  console.log("history", history)
+
+  // Update storage with the new response and updated history
+  await chrome.storage.local.set({
+    currentResponse: newResponse,
+    isLoading: false,
+    history
+  })
 }
