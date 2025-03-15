@@ -203,20 +203,21 @@ function IndexPopup() {
           fontSize: 18,
           lineHeight: 1.5
         }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <img
             src={icon}
             alt="Page Chat"
-            width={32}
-            height={32}
+            width={128}
+            height={128}
             style={{ borderRadius: 4 }}
           />
-          <h2>Page Chat</h2>
+          <div>
+            <h2 style={{ margin: 0, marginBottom: 2 }}>Page Chat</h2>
+            <p style={{ margin: 0 }}>
+              Talk to LLMs about any webpage you're on.
+            </p>
+          </div>
         </div>
-        <p>
-          Put your Anthropic API key below, then right click on any text and use
-          "Quick Summary" to summarize it.
-        </p>
       </div>
       <div style={{ padding: 16, minWidth: 420 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
