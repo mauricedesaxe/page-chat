@@ -4,26 +4,31 @@ import { extractKeyPoints } from "~summarizer"
 chrome.runtime.onInstalled.addListener(() => {
   console.log("Extension installed/updated")
 
-  // Remove any existing context menu items and create new one
+  // Define menu options for easy configuration
+  const menuOptions = [
+    {
+      id: "extract-key-points-selection",
+      title: "Quick Summary",
+      contexts: ["selection"] as chrome.contextMenus.ContextType[]
+    }
+    // Add more menu items here as needed
+  ]
+
+  // Remove any existing context menu items and create new ones
   chrome.contextMenus.removeAll(() => {
-    chrome.contextMenus.create(
-      {
-        id: "extract-key-points-selection",
-        title: "Quick Summary",
-        contexts: ["selection"] // Only show menu on text selection
-      },
-      () => {
+    for (const option of menuOptions) {
+      chrome.contextMenus.create(option, () => {
         // Log success or failure of context menu creation
         if (chrome.runtime.lastError) {
           console.error(
-            "Error creating context menu:",
+            `Error creating context menu "${option.title}":`,
             chrome.runtime.lastError
           )
         } else {
-          console.log("Context menu created successfully")
+          console.log(`Context menu "${option.title}" created successfully`)
         }
-      }
-    )
+      })
+    }
   })
 })
 
