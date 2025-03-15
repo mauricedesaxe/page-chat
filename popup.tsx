@@ -2,8 +2,7 @@ import { useEffect, useState } from "react"
 
 // @ts-ignore
 import icon from "~assets/icon_2.png"
-import { AnthropicKeyConfig } from "~components/AnthropicKeyConfig"
-import { JinaKeyConfig } from "~components/JinaKeyConfig"
+import { Config } from "~components/Config"
 import { ResponseDisplay } from "~components/ResponseDisplay"
 import { useStorageSync } from "~hooks/useStorageSync"
 
@@ -43,49 +42,12 @@ function IndexPopup() {
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <ResponseDisplay isLoading={isLoading} response={response} />
 
-          <details>
-            <summary
-              style={{
-                cursor: "pointer",
-                fontWeight: "bold",
-                padding: "8px 0",
-                userSelect: "none"
-              }}>
-              <h3
-                style={{
-                  margin: 0,
-                  display: "inline-block"
-                }}>
-                API Configuration
-              </h3>
-            </summary>
-            <div
-              style={{
-                marginTop: 16,
-                display: "flex",
-                flexDirection: "column",
-                gap: 16
-              }}>
-              <AnthropicKeyConfig
-                anthropicKey={anthropicKey}
-                setAnthropicKey={setAnthropicKey}
-              />
-              <JinaKeyConfig jinaKey={jinaKey} setJinaKey={setJinaKey} />
-              <div
-                className="warning"
-                style={{
-                  backgroundColor: "#fff3cd",
-                  color: "#856404",
-                  padding: 8,
-                  borderRadius: 4,
-                  fontSize: 12,
-                  marginTop: 8
-                }}>
-                Note: Your API keys are stored locally on your device. Never
-                share your API keys with others.
-              </div>
-            </div>
-          </details>
+          <Config
+            anthropicKey={anthropicKey}
+            setAnthropicKey={setAnthropicKey}
+            jinaKey={jinaKey}
+            setJinaKey={setJinaKey}
+          />
         </div>
       </div>
     </>
