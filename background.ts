@@ -1,18 +1,5 @@
 import { extractKeyPoints } from "~summarizer"
 
-async function openPopup() {
-  // Get the current window
-  const window = await chrome.windows.getCurrent()
-
-  // Get all tabs in the current window
-  const tabs = await chrome.tabs.query({ active: true, windowId: window.id })
-
-  if (tabs[0]) {
-    // Show the extension's popup
-    await chrome.action.openPopup()
-  }
-}
-
 // Set up context menu when extension is installed or updated
 chrome.runtime.onInstalled.addListener(() => {
   console.log("Extension installed/updated")
@@ -79,3 +66,16 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     }
   }
 })
+
+async function openPopup() {
+  // Get the current window
+  const window = await chrome.windows.getCurrent()
+
+  // Get all tabs in the current window
+  const tabs = await chrome.tabs.query({ active: true, windowId: window.id })
+
+  if (tabs[0]) {
+    // Show the extension's popup
+    await chrome.action.openPopup()
+  }
+}
