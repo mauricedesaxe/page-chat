@@ -1,6 +1,6 @@
 # The Gist of It - AI-Powered Text Summarization
 
-This Chrome extension uses GPT to provide instant, intelligent summaries of any selected text. Built with [Plasmo](https://docs.plasmo.com/) and powered by OpenAI's GPT models.
+This Chrome extension uses GPT to provide instant, intelligent summaries of any selected text. Built with [Plasmo](https://docs.plasmo.com/) and powered by Anthropic's models.
 
 ## Features
 

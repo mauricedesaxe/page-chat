@@ -52,16 +52,16 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       await chrome.storage.local.set({ isLoading: true })
       await openPopup()
 
-      const result = await chrome.storage.local.get("openAIKey")
-      if (!result.openAIKey) {
+      const result = await chrome.storage.local.get("anthropicKey")
+      if (!result.anthropicKey) {
         throw new Error(
-          "Please enter your OpenAI API key in the extension popup"
+          "Please enter your Anthropic API key in the extension popup"
         )
       }
 
       const summary = await extractKeyPoints(
         info.selectionText,
-        result.openAIKey
+        result.anthropicKey
       )
 
       // Update storage with summary and clear loading state
@@ -85,8 +85,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.type === "SUMMARIZE_TEXT") {
     ;(async () => {
       try {
-        const result = await chrome.storage.local.get("openAIKey")
-        const summary = await extractKeyPoints(message.text, result.openAIKey)
+        const result = await chrome.storage.local.get("anthropicKey")
+        const summary = await extractKeyPoints(
+          message.text,
+          result.anthropicKey
+        )
 
         // Send summary to popup
         chrome.runtime.sendMessage({

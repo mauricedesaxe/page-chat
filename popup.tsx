@@ -3,18 +3,18 @@ import { useEffect, useState } from "react"
 // @ts-ignore
 import icon from "~assets/icon.png"
 
-const OpenAIKeyConfig = ({ openAIKey, setOpenAIKey }) => {
+const OpenAIKeyConfig = ({ anthropicKey, setOpenAIKey }) => {
   const [isVisible, setIsVisible] = useState(false)
 
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newKey = e.target.value
     setOpenAIKey(newKey)
-    chrome.storage.local.set({ openAIKey: newKey })
+    chrome.storage.local.set({ anthropicKey: newKey })
   }
 
   const clearApiKey = () => {
     setOpenAIKey("")
-    chrome.storage.local.remove("openAIKey")
+    chrome.storage.local.remove("anthropicKey")
   }
 
   return (
@@ -22,13 +22,13 @@ const OpenAIKeyConfig = ({ openAIKey, setOpenAIKey }) => {
       <label
         htmlFor="apiKey"
         style={{ display: "block", fontSize: 16, lineHeight: 1.5 }}>
-        OpenAI API Key:
+        Anthropic API Key:
       </label>
       <div style={{ display: "flex", gap: 8 }}>
         <input
           id="apiKey"
           type={isVisible ? "text" : "password"}
-          value={openAIKey}
+          value={anthropicKey}
           onChange={handleKeyChange}
           style={{
             width: "100%",
@@ -41,7 +41,7 @@ const OpenAIKeyConfig = ({ openAIKey, setOpenAIKey }) => {
             boxSizing: "border-box",
             height: 32
           }}
-          placeholder="Enter your OpenAI API key"
+          placeholder="Enter your Anthropic API key"
         />
         <button
           onClick={() => setIsVisible(!isVisible)}
@@ -155,17 +155,17 @@ const SummaryDisplay = ({ isLoading, summary }) => {
 }
 
 function IndexPopup() {
-  const [openAIKey, setOpenAIKey] = useState("")
+  const [anthropicKey, setOpenAIKey] = useState("")
   const [summary, setSummary] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     // Load saved API key and states on mount
     chrome.storage.local.get(
-      ["openAIKey", "currentSummary", "isLoading"],
+      ["anthropicKey", "currentSummary", "isLoading"],
       (result) => {
-        if (result.openAIKey) {
-          setOpenAIKey(result.openAIKey)
+        if (result.anthropicKey) {
+          setOpenAIKey(result.anthropicKey)
         }
         if (result.currentSummary) {
           setSummary(result.currentSummary)
@@ -214,14 +214,17 @@ function IndexPopup() {
           <h2>The Gist of It</h2>
         </div>
         <p>
-          Put your OpenAI API key below, then right click on any text and use
+          Put your Anthropic API key below, then right click on any text and use
           "Get the Gist of It" to summarize it.
         </p>
       </div>
       <div style={{ padding: 16, minWidth: 420 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <SummaryDisplay isLoading={isLoading} summary={summary} />
-          <OpenAIKeyConfig openAIKey={openAIKey} setOpenAIKey={setOpenAIKey} />
+          <OpenAIKeyConfig
+            anthropicKey={anthropicKey}
+            setOpenAIKey={setOpenAIKey}
+          />
         </div>
       </div>
     </>
