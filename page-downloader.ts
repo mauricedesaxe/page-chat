@@ -7,9 +7,7 @@ export async function downloadPage(url: string, jinaKey: string) {
     Authorization: `Bearer ${jinaKey}`,
     "X-Engine": "browser",
     "X-No-Cache": "true",
-    "X-Return-Format": "markdown",
-    "X-With-Images-Summary": "true",
-    "X-With-Links-Summary": "true"
+    "X-Return-Format": "markdown"
   }
 
   try {
