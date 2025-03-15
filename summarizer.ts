@@ -57,7 +57,7 @@ async function summarizeText(text: string, apiKey: string): Promise<string> {
 
     // Ask Claude for summary
     const response = await anthropic.messages.create({
-      model: "claude-3-5-sonnet",
+      model: "claude-3-5-sonnet-20241022",
       max_tokens: getMaxTokens(wordCount),
       system: prompt,
       messages: [{ role: "user", content: text }],
