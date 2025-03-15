@@ -4,24 +4,24 @@ import { useEffect, useState } from "react"
 import icon from "~assets/icon_2.png"
 import { AnthropicKeyConfig } from "~components/AnthropicKeyConfig"
 import { JinaKeyConfig } from "~components/JinaKeyConfig"
-import { SummaryDisplay } from "~components/SummaryDisplay"
+import { ResponseDisplay } from "~components/ResponseDisplay"
 
 function IndexPopup() {
   const [anthropicKey, setAnthropicKey] = useState("")
   const [jinaKey, setJinaKey] = useState("")
-  const [summary, setSummary] = useState("")
+  const [response, setResponse] = useState("")
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     // Load saved API key and states on mount
     chrome.storage.local.get(
-      ["anthropicKey", "jinaKey", "currentSummary", "isLoading"],
+      ["anthropicKey", "jinaKey", "currentResponse", "isLoading"],
       (result) => {
         if (result.anthropicKey) {
           setAnthropicKey(result.anthropicKey)
         }
-        if (result.currentSummary) {
-          setSummary(result.currentSummary)
+        if (result.currentResponse) {
+          setResponse(result.currentResponse)
         }
         if (result.jinaKey) {
           setJinaKey(result.jinaKey)
@@ -33,8 +33,8 @@ function IndexPopup() {
     // Listen for storage changes
     const handleStorageChange = (changes, namespace) => {
       if (namespace === "local") {
-        if (changes.currentSummary) {
-          setSummary(changes.currentSummary.newValue)
+        if (changes.currentResponse) {
+          setResponse(changes.currentResponse.newValue)
         }
         if (changes.isLoading) {
           setIsLoading(changes.isLoading.newValue)
@@ -77,7 +77,7 @@ function IndexPopup() {
       </div>
       <div style={{ padding: 16, minWidth: 420 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <SummaryDisplay isLoading={isLoading} summary={summary} />
+          <ResponseDisplay isLoading={isLoading} response={response} />
 
           <details>
             <summary

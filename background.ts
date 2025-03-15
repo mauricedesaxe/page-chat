@@ -66,14 +66,14 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 
       // Update storage with summary and clear loading state
       await chrome.storage.local.set({
-        currentSummary: summary,
+        currentResponse: summary,
         isLoading: false
       })
     } catch (error) {
       console.error("Error generating summary:", error)
       // Store error and clear loading state
       await chrome.storage.local.set({
-        currentSummary: `Error: ${error.message}`,
+        currentResponse: `Error: ${error.message}`,
         isLoading: false
       })
     }
@@ -102,7 +102,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.error("Error generating summary:", error)
         // Store error in storage instead of sending message
         await chrome.storage.local.set({
-          currentSummary: `Error: ${error.message}`
+          currentResponse: `Error: ${error.message}`
         })
         await openPopup()
         sendResponse({ success: false, error: error.message })

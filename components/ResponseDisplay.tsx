@@ -1,4 +1,4 @@
-export const SummaryDisplay = ({ isLoading, summary }) => {
+export const ResponseDisplay = ({ isLoading, response }) => {
   const LoadingSpinner = () => (
     <div
       style={{
@@ -32,7 +32,7 @@ export const SummaryDisplay = ({ isLoading, summary }) => {
     return <LoadingSpinner />
   }
 
-  if (summary) {
+  if (response) {
     return (
       <div
         style={{
@@ -50,7 +50,7 @@ export const SummaryDisplay = ({ isLoading, summary }) => {
           <h3>Summary</h3>
           <button
             onClick={() => {
-              chrome.storage.local.remove("currentSummary")
+              chrome.storage.local.remove("currentResponse")
             }}
             style={{
               padding: "4px 8px",
@@ -63,7 +63,7 @@ export const SummaryDisplay = ({ isLoading, summary }) => {
           </button>
         </div>
         <p style={{ whiteSpace: "pre-wrap", fontSize: 16, lineHeight: 1.5 }}>
-          {summary}
+          {response}
         </p>
       </div>
     )
