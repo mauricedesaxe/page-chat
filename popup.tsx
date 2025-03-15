@@ -3,17 +3,17 @@ import { useEffect, useState } from "react"
 // @ts-ignore
 import icon from "~assets/icon_2.png"
 
-const OpenAIKeyConfig = ({ anthropicKey, setOpenAIKey }) => {
+const AnthropicKeyConfig = ({ anthropicKey, setAnthropicKey }) => {
   const [isVisible, setIsVisible] = useState(false)
 
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newKey = e.target.value
-    setOpenAIKey(newKey)
+    setAnthropicKey(newKey)
     chrome.storage.local.set({ anthropicKey: newKey })
   }
 
   const clearApiKey = () => {
-    setOpenAIKey("")
+    setAnthropicKey("")
     chrome.storage.local.remove("anthropicKey")
   }
 
@@ -208,7 +208,7 @@ const SummaryDisplay = ({ isLoading, summary }) => {
 }
 
 function IndexPopup() {
-  const [anthropicKey, setOpenAIKey] = useState("")
+  const [anthropicKey, setAnthropicKey] = useState("")
   const [jinaKey, setJinaKey] = useState("")
   const [summary, setSummary] = useState("")
   const [isLoading, setIsLoading] = useState(false)
@@ -219,7 +219,7 @@ function IndexPopup() {
       ["anthropicKey", "jinaKey", "currentSummary", "isLoading"],
       (result) => {
         if (result.anthropicKey) {
-          setOpenAIKey(result.anthropicKey)
+          setAnthropicKey(result.anthropicKey)
         }
         if (result.currentSummary) {
           setSummary(result.currentSummary)
@@ -303,9 +303,9 @@ function IndexPopup() {
                 flexDirection: "column",
                 gap: 16
               }}>
-              <OpenAIKeyConfig
+              <AnthropicKeyConfig
                 anthropicKey={anthropicKey}
-                setOpenAIKey={setOpenAIKey}
+                setAnthropicKey={setAnthropicKey}
               />
               <JinaAIKeyConfig jinaKey={jinaKey} setJinaKey={setJinaKey} />
               <div
