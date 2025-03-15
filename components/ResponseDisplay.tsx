@@ -24,7 +24,7 @@ export const ResponseDisplay = ({ isLoading, response }) => {
             to { transform: rotate(360deg); }
           }
         `}</style>
-      <p>Generating summary...</p>
+      <p>Generating response...</p>
     </div>
   )
 
@@ -47,7 +47,7 @@ export const ResponseDisplay = ({ isLoading, response }) => {
             justifyContent: "space-between",
             alignItems: "center"
           }}>
-          <h3>Summary</h3>
+          <h3>Response</h3>
           <button
             onClick={() => {
               chrome.storage.local.remove("currentResponse")
@@ -59,7 +59,7 @@ export const ResponseDisplay = ({ isLoading, response }) => {
               backgroundColor: "#fff",
               cursor: "pointer"
             }}>
-            Clear Summary
+            Clear Response
           </button>
         </div>
         <p style={{ whiteSpace: "pre-wrap", fontSize: 16, lineHeight: 1.5 }}>

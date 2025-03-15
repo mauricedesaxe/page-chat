@@ -62,7 +62,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         isLoading: false
       })
     } catch (error) {
-      console.error("Error generating summary:", error)
+      console.error("Error generating response:", error)
       // Store error and clear loading state
       await chrome.storage.local.set({
         currentResponse: `Error: ${error.message}`,
