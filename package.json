@@ -10,6 +10,7 @@
     "package": "plasmo package"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
     "openai": "^4.73.0",
     "plasmo": "0.89.4",
     "react": "18.2.0",

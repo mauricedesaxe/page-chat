@@ -1,6 +1,6 @@
-import { getOpenAIClient } from "~clients/openai"
+import { getAnthropicClient } from "~clients/anthropic"
 
-// Get summary of text using OpenAI
+// Get summary of text using Anthropic Claude
 export async function extractKeyPoints(
   text: string,
   apiKey: string
@@ -46,43 +46,40 @@ export async function extractKeyPoints(
   return summaries[0]
 }
 
-// Get summary from OpenAI
+// Get summary from Anthropic Claude
 async function summarizeText(text: string, apiKey: string): Promise<string> {
   try {
-    const openai = getOpenAIClient(apiKey)
+    const anthropic = getAnthropicClient(apiKey)
 
     // Count words to decide prompt
     const wordCount = text.split(/\s+/).length
     const prompt = makePrompt(wordCount)
 
-    // Ask OpenAI for summary
-    const response = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [
-        { role: "system", content: prompt },
-        { role: "user", content: text }
-      ],
-      temperature: 0.2,
+    // Ask Claude for summary
+    const response = await anthropic.messages.create({
+      model: "claude-3-5-sonnet",
       max_tokens: getMaxTokens(wordCount),
-      presence_penalty: -0.2,
-      frequency_penalty: 0.3
+      system: prompt,
+      messages: [{ role: "user", content: text }],
+      temperature: 0.2
     })
 
-    const summary = response.choices[0].message.content
+    const summary =
+      response.content[0].type === "text" ? response.content[0].text : null
     if (!summary) {
-      throw new Error("OpenAI gave empty response")
+      throw new Error("Claude gave empty response")
     }
 
     // Get text between <summary> tags
     const match = summary.match(/<summary>(.*?)<\/summary>/s)
     if (!match) {
-      throw new Error("OpenAI response missing summary tags")
+      throw new Error("Claude response missing summary tags")
     }
 
     return match[1].trim()
   } catch (error) {
     throw new Error(
-      "OpenAI error: " +
+      "Claude error: " +
         (error instanceof Error ? error.message : "Unknown error")
     )
   }
