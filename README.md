@@ -1,36 +1,6 @@
-# The Gist of It - AI-Powered Text Summarization
+# Page Chat - Use talk to LLMs about your browser page
 
-This Chrome extension uses GPT to provide instant, intelligent summaries of any selected text. Built with [Plasmo](https://docs.plasmo.com/) and powered by Anthropic's models.
-
-## Features
-
-### Current
-- One-click text summarization from any selected text
-- Automatic length adjustment based on input text
-- Secure local API key storage
-- Support for large text chunks with smart splitting
-
-### "Planned" Features
-
-I don't like to commit to long-term plans, but here are some ideas I'm currently kicking around.
-Do not expect these to be implemented anytime soon or ever.
-Simply brainstorming out loud.
-
-#### URL-based Summarization
-- Right-click on a link and select "Summarize this page", ingests the page as markdown and summarizes it.
-
-#### Multi-Modal Summaries
-- YouTube video transcript summarization
-- PDF document summarization
-
-#### Research Assistant Mode
-- Key quote extraction
-
-#### Knowledge Base Features
-- Topic-based summary organization
-- Tagging and categorization
-- Summary hybrid (keyword and vector) search functionality
-- Summary export as markdown
+This Chrome extension uses Anthropic Claude to let you chat with LLMs about your browser page. Built with [Plasmo](https://docs.plasmo.com/).
 
 ## Getting Started
 
