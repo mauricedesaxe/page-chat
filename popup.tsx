@@ -64,18 +64,6 @@ const OpenAIKeyConfig = ({ anthropicKey, setOpenAIKey }) => {
         }}>
         Clear API Key
       </button>
-      <div
-        className="warning"
-        style={{
-          backgroundColor: "#fff3cd",
-          color: "#856404",
-          padding: 8,
-          borderRadius: 4,
-          fontSize: 12
-        }}>
-        Note: Your API key is stored locally on your device. Never share your
-        API key with others.
-      </div>
     </>
   )
 }
@@ -141,18 +129,6 @@ const JinaAIKeyConfig = ({ jinaKey, setJinaKey }) => {
         }}>
         Clear API Key
       </button>
-      <div
-        className="warning"
-        style={{
-          backgroundColor: "#fff3cd",
-          color: "#856404",
-          padding: 8,
-          borderRadius: 4,
-          fontSize: 12
-        }}>
-        Note: Your API key is stored locally on your device. Never share your
-        API key with others.
-      </div>
     </>
   )
 }
@@ -308,6 +284,18 @@ function IndexPopup() {
             setOpenAIKey={setOpenAIKey}
           />
           <JinaAIKeyConfig jinaKey={jinaKey} setJinaKey={setJinaKey} />
+          <div
+            className="warning"
+            style={{
+              backgroundColor: "#fff3cd",
+              color: "#856404",
+              padding: 8,
+              borderRadius: 4,
+              fontSize: 12
+            }}>
+            Note: Your API keys are stored locally on your device. Never share
+            your API keys with others.
+          </div>
         </div>
       </div>
     </>
