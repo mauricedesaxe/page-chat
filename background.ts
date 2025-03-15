@@ -79,35 +79,3 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     }
   }
 })
-
-// Handle messages from other parts of the extension
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  if (message.type === "SUMMARIZE_TEXT") {
-    ;(async () => {
-      try {
-        const result = await chrome.storage.local.get("anthropicKey")
-        const summary = await extractKeyPoints(
-          message.text,
-          result.anthropicKey
-        )
-
-        // Send summary to popup
-        chrome.runtime.sendMessage({
-          type: "UPDATE_SUMMARY",
-          summary
-        })
-
-        sendResponse({ success: true, summary })
-      } catch (error) {
-        console.error("Error generating summary:", error)
-        // Store error in storage instead of sending message
-        await chrome.storage.local.set({
-          currentResponse: `Error: ${error.message}`
-        })
-        await openPopup()
-        sendResponse({ success: false, error: error.message })
-      }
-    })()
-    return true
-  }
-})
