@@ -1,10 +1,15 @@
 export async function downloadPage(url: string, jinaKey: string) {
-  const requestUrl =
-    url ||
-    "https://r.jina.ai/https://alexlazar.dev/how-to-develop-ai-powered-products-effectively/"
+  if (!url) {
+    throw new Error("No URL provided")
+  }
+  const requestUrl = `https://r.jina.ai/${url}`
   const headers = {
     Authorization: `Bearer ${jinaKey}`,
-    "X-No-Cache": "true"
+    "X-Engine": "browser",
+    "X-No-Cache": "true",
+    "X-Return-Format": "markdown",
+    "X-With-Images-Summary": "true",
+    "X-With-Links-Summary": "true"
   }
 
   try {
