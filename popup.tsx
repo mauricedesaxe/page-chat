@@ -206,16 +206,16 @@ function IndexPopup() {
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <img
             src={icon}
-            alt="The Gist of It"
+            alt="Page Chat"
             width={32}
             height={32}
             style={{ borderRadius: 4 }}
           />
-          <h2>The Gist of It</h2>
+          <h2>Page Chat</h2>
         </div>
         <p>
           Put your Anthropic API key below, then right click on any text and use
-          "Get the Gist of It" to summarize it.
+          "Quick Summary" to summarize it.
         </p>
       </div>
       <div style={{ padding: 16, minWidth: 420 }}>
