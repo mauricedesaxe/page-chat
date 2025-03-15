@@ -1,3 +1,4 @@
+import { downloadPage } from "~page-downloader"
 import { extractKeyPoints } from "~summarizer"
 
 // Set up context menu when extension is installed or updated
@@ -32,7 +33,6 @@ chrome.runtime.onInstalled.addListener(() => {
   })
 })
 
-// Handle clicks on the context menu
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (
     info.menuItemId === "extract-key-points-selection" &&
@@ -64,6 +64,49 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
     } catch (error) {
       console.error("Error generating summary:", error)
       // Store error and clear loading state
+      await chrome.storage.local.set({
+        currentResponse: `Error: ${error.message}`,
+        isLoading: false
+      })
+    }
+  }
+})
+
+// Handle keyboard shortcuts
+chrome.commands.onCommand.addListener(async (command) => {
+  if (command === "download-page") {
+    try {
+      // Get the active tab
+      const [activeTab] = await chrome.tabs.query({
+        active: true,
+        currentWindow: true
+      })
+
+      if (!activeTab?.url) {
+        throw new Error("No active tab URL found")
+      }
+
+      // Set loading state and open popup
+      await chrome.storage.local.set({ isLoading: true })
+      await openPopup()
+
+      // Get the Jina API key
+      const result = await chrome.storage.local.get("jinaKey")
+      if (!result.jinaKey) {
+        throw new Error("Please enter your Jina API key in the extension popup")
+      }
+
+      // Download the page content
+      const pageContent = await downloadPage(activeTab.url, result.jinaKey)
+
+      // Store the downloaded content
+      await chrome.storage.local.set({
+        currentResponse: `Page downloaded successfully: ${pageContent.substring(0, 100)}...`,
+        pageContent: pageContent,
+        isLoading: false
+      })
+    } catch (error) {
+      console.error("Error downloading page:", error)
       await chrome.storage.local.set({
         currentResponse: `Error: ${error.message}`,
         isLoading: false

@@ -33,10 +33,21 @@
     "permissions": [
       "contextMenus",
       "storage",
-      "action"
+      "action",
+      "activeTab",
+      "scripting"
     ],
     "background": {
       "service_worker": "background.ts"
+    },
+    "commands": {
+      "download-page": {
+        "suggested_key": {
+          "default": "Ctrl+E",
+          "mac": "Command+E"
+        },
+        "description": "Download current page into context"
+      }
     }
   },
   "license": "MIT"
