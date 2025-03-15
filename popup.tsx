@@ -279,23 +279,50 @@ function IndexPopup() {
       <div style={{ padding: 16, minWidth: 420 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
           <SummaryDisplay isLoading={isLoading} summary={summary} />
-          <OpenAIKeyConfig
-            anthropicKey={anthropicKey}
-            setOpenAIKey={setOpenAIKey}
-          />
-          <JinaAIKeyConfig jinaKey={jinaKey} setJinaKey={setJinaKey} />
-          <div
-            className="warning"
-            style={{
-              backgroundColor: "#fff3cd",
-              color: "#856404",
-              padding: 8,
-              borderRadius: 4,
-              fontSize: 12
-            }}>
-            Note: Your API keys are stored locally on your device. Never share
-            your API keys with others.
-          </div>
+
+          <details>
+            <summary
+              style={{
+                cursor: "pointer",
+                fontWeight: "bold",
+                padding: "8px 0",
+                userSelect: "none"
+              }}>
+              <h3
+                style={{
+                  margin: 0,
+                  display: "inline-block"
+                }}>
+                API Configuration
+              </h3>
+            </summary>
+            <div
+              style={{
+                marginTop: 16,
+                display: "flex",
+                flexDirection: "column",
+                gap: 16
+              }}>
+              <OpenAIKeyConfig
+                anthropicKey={anthropicKey}
+                setOpenAIKey={setOpenAIKey}
+              />
+              <JinaAIKeyConfig jinaKey={jinaKey} setJinaKey={setJinaKey} />
+              <div
+                className="warning"
+                style={{
+                  backgroundColor: "#fff3cd",
+                  color: "#856404",
+                  padding: 8,
+                  borderRadius: 4,
+                  fontSize: 12,
+                  marginTop: 8
+                }}>
+                Note: Your API keys are stored locally on your device. Never
+                share your API keys with others.
+              </div>
+            </div>
+          </details>
         </div>
       </div>
     </>
