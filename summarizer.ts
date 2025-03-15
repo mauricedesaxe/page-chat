@@ -1,4 +1,4 @@
-import OpenAI from "openai"
+import { getOpenAIClient } from "~clients/openai"
 
 // Get summary of text using OpenAI
 export async function extractKeyPoints(
@@ -49,7 +49,7 @@ export async function extractKeyPoints(
 // Get summary from OpenAI
 async function summarizeText(text: string, apiKey: string): Promise<string> {
   try {
-    const openai = new OpenAI({ apiKey })
+    const openai = getOpenAIClient(apiKey)
 
     // Count words to decide prompt
     const wordCount = text.split(/\s+/).length
