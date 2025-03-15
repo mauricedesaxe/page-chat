@@ -5,55 +5,13 @@ import icon from "~assets/icon_2.png"
 import { AnthropicKeyConfig } from "~components/AnthropicKeyConfig"
 import { JinaKeyConfig } from "~components/JinaKeyConfig"
 import { ResponseDisplay } from "~components/ResponseDisplay"
+import { useStorageSync } from "~hooks/useStorageSync"
 
 function IndexPopup() {
-  const [anthropicKey, setAnthropicKey] = useState("")
-  const [jinaKey, setJinaKey] = useState("")
-  const [response, setResponse] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
-
-  useEffect(() => {
-    // Load saved API key and states on mount
-    chrome.storage.local.get(
-      ["anthropicKey", "jinaKey", "currentResponse", "isLoading"],
-      (result) => {
-        if (result.anthropicKey) {
-          setAnthropicKey(result.anthropicKey)
-        }
-        if (result.currentResponse) {
-          setResponse(result.currentResponse)
-        }
-        if (result.jinaKey) {
-          setJinaKey(result.jinaKey)
-        }
-        setIsLoading(!!result.isLoading)
-      }
-    )
-
-    // Listen for storage changes
-    const handleStorageChange = (changes, namespace) => {
-      if (namespace === "local") {
-        if (changes.currentResponse) {
-          setResponse(changes.currentResponse.newValue)
-        }
-        if (changes.isLoading) {
-          setIsLoading(changes.isLoading.newValue)
-        }
-        if (changes.anthropicKey) {
-          setAnthropicKey(changes.anthropicKey.newValue)
-        }
-        if (changes.jinaKey) {
-          setJinaKey(changes.jinaKey.newValue)
-        }
-      }
-    }
-
-    chrome.storage.onChanged.addListener(handleStorageChange)
-
-    return () => {
-      chrome.storage.onChanged.removeListener(handleStorageChange)
-    }
-  }, [])
+  const [anthropicKey, setAnthropicKey] = useStorageSync("anthropicKey", "")
+  const [jinaKey, setJinaKey] = useStorageSync("jinaKey", "")
+  const [response, setResponse] = useStorageSync("currentResponse", "")
+  const [isLoading, setIsLoading] = useStorageSync("isLoading", false)
 
   return (
     <>
