@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 
 // @ts-ignore
-import icon from "~assets/icon.png"
+import icon from "~assets/icon_2.png"
 
 const OpenAIKeyConfig = ({ anthropicKey, setOpenAIKey }) => {
   const [isVisible, setIsVisible] = useState(false)
