@@ -8,8 +8,8 @@ chrome.runtime.onInstalled.addListener(() => {
   // Define menu options for easy configuration
   const menuOptions = [
     {
-      id: "extract-key-points-selection",
-      title: "Quick Summary",
+      id: "add-selection-to-context",
+      title: "Add Selection to Context",
       contexts: ["selection"] as chrome.contextMenus.ContextType[]
     }
     // Add more menu items here as needed
@@ -35,34 +35,27 @@ chrome.runtime.onInstalled.addListener(() => {
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   if (
-    info.menuItemId === "extract-key-points-selection" &&
+    info.menuItemId === "add-selection-to-context" &&
     info.selectionText &&
     tab.id
   ) {
     try {
-      // Set loading state and open popup immediately
-      await chrome.storage.local.set({ isLoading: true })
       await openPopup()
 
-      const result = await chrome.storage.local.get("anthropicKey")
-      if (!result.anthropicKey) {
-        throw new Error(
-          "Please enter your Anthropic API key in the extension popup"
+      const result = await chrome.storage.local.get("context")
+      if (!result.context) {
+        console.log(
+          "No context found, that's fine. We'll start with an empty context."
         )
+        await chrome.storage.local.set({ context: [] })
       }
-
-      const summary = await extractKeyPoints(
-        info.selectionText,
-        result.anthropicKey
-      )
-
-      await addNewResponse(summary)
+      const context = result.context || []
+      context.push(info.selectionText)
+      await chrome.storage.local.set({ context })
     } catch (error) {
-      console.error("Error generating response:", error)
-      // Store error and clear loading state
+      console.error("Error adding selection to context:", error)
       await chrome.storage.local.set({
-        currentResponse: `Error: ${error.message}`,
-        isLoading: false
+        currentResponse: `Error: ${error.message}`
       })
     }
   }
@@ -72,31 +65,32 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
 chrome.commands.onCommand.addListener(async (command) => {
   if (command === "download-page") {
     try {
-      // Get the active tab
       const [activeTab] = await chrome.tabs.query({
         active: true,
         currentWindow: true
       })
-
       if (!activeTab?.id) {
         throw new Error("No active tab found")
       }
 
-      // Set loading state and open popup
-      await chrome.storage.local.set({ isLoading: true })
       await openPopup()
 
-      // Download the page content directly from the tab
-      // Pass the tab ID instead of URL
       const pageContent = await downloadPage(activeTab.id)
 
-      // Store the downloaded content
-      await addNewResponse(pageContent)
+      const result = await chrome.storage.local.get("context")
+      if (!result.context) {
+        console.log(
+          "No context found, that's fine. We'll start with an empty context."
+        )
+        await chrome.storage.local.set({ context: [] })
+      }
+      const context = result.context || []
+      context.push(pageContent)
+      await chrome.storage.local.set({ context })
     } catch (error) {
       console.error("Error downloading page:", error)
       await chrome.storage.local.set({
-        currentResponse: `Error: ${error.message}`,
-        isLoading: false
+        currentResponse: `Error: ${error.message}`
       })
     }
   }
@@ -113,37 +107,4 @@ async function openPopup() {
     // Show the extension's popup
     await chrome.action.openPopup()
   }
-}
-
-type HistoricalEntry = {
-  response: string
-  timestamp: string
-}
-
-/**
- * Add a new response to the history list
- * @param newResponse The new response to add
- */
-async function addNewResponse(newResponse: string) {
-  // Get existing history and current response
-  const storage = await chrome.storage.local.get(["history", "currentResponse"])
-  let history: HistoricalEntry[] = storage.history || []
-
-  // If there's a current response, add it to history before replacing it
-  if (storage.currentResponse) {
-    history.push({
-      response: storage.currentResponse,
-      timestamp: new Date().toISOString()
-    })
-  }
-
-  console.log("newResponse", newResponse)
-  console.log("history", history)
-
-  // Update storage with the new response and updated history
-  await chrome.storage.local.set({
-    currentResponse: newResponse,
-    isLoading: false,
-    history
-  })
 }
