@@ -78,22 +78,17 @@ chrome.commands.onCommand.addListener(async (command) => {
         currentWindow: true
       })
 
-      if (!activeTab?.url) {
-        throw new Error("No active tab URL found")
+      if (!activeTab?.id) {
+        throw new Error("No active tab found")
       }
 
       // Set loading state and open popup
       await chrome.storage.local.set({ isLoading: true })
       await openPopup()
 
-      // Get the Jina API key
-      const result = await chrome.storage.local.get("jinaKey")
-      if (!result.jinaKey) {
-        throw new Error("Please enter your Jina API key in the extension popup")
-      }
-
-      // Download the page content
-      const pageContent = await downloadPage(activeTab.url, result.jinaKey)
+      // Download the page content directly from the tab
+      // Pass the tab ID instead of URL
+      const pageContent = await downloadPage(activeTab.id)
 
       // Store the downloaded content
       await addNewResponse(pageContent)
