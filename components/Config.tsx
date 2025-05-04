@@ -1,7 +1,7 @@
 import { AnthropicKeyConfig } from "./configs/AnthropicKeyConfig"
-import { JinaKeyConfig } from "./configs/JinaKeyConfig"
+import { OpenAIKeyConfig } from "./configs/OpenAIKeyConfig"
 
-export function Config({ anthropicKey, setAnthropicKey, jinaKey, setJinaKey }) {
+export function Config({ anthropicKey, setAnthropicKey }) {
   return (
     <details>
       <summary
@@ -30,7 +30,7 @@ export function Config({ anthropicKey, setAnthropicKey, jinaKey, setJinaKey }) {
           anthropicKey={anthropicKey}
           setAnthropicKey={setAnthropicKey}
         />
-        <JinaKeyConfig jinaKey={jinaKey} setJinaKey={setJinaKey} />
+        <OpenAIKeyConfig />
         <div
           className="warning"
           style={{

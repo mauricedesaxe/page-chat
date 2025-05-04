@@ -1,31 +1,32 @@
 import { useState } from "react"
 
-export const JinaKeyConfig = ({ jinaKey, setJinaKey }) => {
+import { useStorageSync } from "~hooks/useStorageSync"
+
+export const OpenAIKeyConfig = () => {
   const [isVisible, setIsVisible] = useState(false)
+  const [openaiKey, setOpenaiKey] = useStorageSync("openaiKey", "")
 
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newKey = e.target.value
-    setJinaKey(newKey)
-    chrome.storage.local.set({ jinaKey: newKey })
+    setOpenaiKey(newKey)
   }
 
   const clearApiKey = () => {
-    setJinaKey("")
-    chrome.storage.local.remove("jinaKey")
+    setOpenaiKey("")
   }
 
   return (
     <>
       <label
-        htmlFor="jinaKey"
+        htmlFor="openaiKey"
         style={{ display: "block", fontSize: 16, lineHeight: 1.5 }}>
-        Jina AI API Key:
+        OpenAI API Key:
       </label>
       <div style={{ display: "flex", gap: 8 }}>
         <input
-          id="jinaKey"
+          id="openaiKey"
           type={isVisible ? "text" : "password"}
-          value={jinaKey}
+          value={openaiKey}
           onChange={handleKeyChange}
           style={{
             width: "100%",
@@ -38,7 +39,7 @@ export const JinaKeyConfig = ({ jinaKey, setJinaKey }) => {
             boxSizing: "border-box",
             height: 32
           }}
-          placeholder="Enter your Jina AI API key"
+          placeholder="Enter your OpenAI API key"
         />
         <button
           onClick={() => setIsVisible(!isVisible)}

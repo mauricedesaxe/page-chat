@@ -1,17 +1,12 @@
-import { useEffect, useState } from "react"
-
 // @ts-ignore
 import icon from "~assets/icon_2.png"
+import { Chat } from "~components/Chat"
 import { Config } from "~components/Config"
 import { ContextManager } from "~components/ContextManager"
-import { ResponseDisplay } from "~components/ResponseDisplay"
 import { useStorageSync } from "~hooks/useStorageSync"
 
 function IndexPopup() {
   const [anthropicKey, setAnthropicKey] = useStorageSync("anthropicKey", "")
-  const [jinaKey, setJinaKey] = useStorageSync("jinaKey", "")
-  const [response, setResponse] = useStorageSync("currentResponse", "")
-  const [isLoading, setIsLoading] = useStorageSync("isLoading", false)
 
   return (
     <>
@@ -41,15 +36,13 @@ function IndexPopup() {
       </div>
       <div style={{ padding: 16, minWidth: 420 }}>
         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-          <ResponseDisplay isLoading={isLoading} response={response} />
+          <Chat />
 
           <ContextManager />
 
           <Config
             anthropicKey={anthropicKey}
             setAnthropicKey={setAnthropicKey}
-            jinaKey={jinaKey}
-            setJinaKey={setJinaKey}
           />
         </div>
       </div>
