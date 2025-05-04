@@ -1,17 +1,18 @@
 import { useState } from "react"
 
-export const AnthropicKeyConfig = ({ anthropicKey, setAnthropicKey }) => {
+import { useStorageSync } from "~hooks/useStorageSync"
+
+export const AnthropicKeyConfig = () => {
   const [isVisible, setIsVisible] = useState(false)
+  const [anthropicKey, setAnthropicKey] = useStorageSync("anthropicKey", "")
 
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newKey = e.target.value
     setAnthropicKey(newKey)
-    chrome.storage.local.set({ anthropicKey: newKey })
   }
 
   const clearApiKey = () => {
     setAnthropicKey("")
-    chrome.storage.local.remove("anthropicKey")
   }
 
   return (

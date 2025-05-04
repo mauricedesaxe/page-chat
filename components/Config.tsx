@@ -1,7 +1,7 @@
 import { AnthropicKeyConfig } from "./configs/AnthropicKeyConfig"
 import { OpenAIKeyConfig } from "./configs/OpenAIKeyConfig"
 
-export function Config({ anthropicKey, setAnthropicKey }) {
+export function Config() {
   return (
     <details>
       <summary
@@ -26,10 +26,7 @@ export function Config({ anthropicKey, setAnthropicKey }) {
           flexDirection: "column",
           gap: 16
         }}>
-        <AnthropicKeyConfig
-          anthropicKey={anthropicKey}
-          setAnthropicKey={setAnthropicKey}
-        />
+        <AnthropicKeyConfig />
         <OpenAIKeyConfig />
         <div
           className="warning"

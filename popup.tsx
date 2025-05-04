@@ -3,11 +3,8 @@ import icon from "~assets/icon_2.png"
 import { Chat } from "~components/Chat"
 import { Config } from "~components/Config"
 import { ContextManager } from "~components/ContextManager"
-import { useStorageSync } from "~hooks/useStorageSync"
 
 function IndexPopup() {
-  const [anthropicKey, setAnthropicKey] = useStorageSync("anthropicKey", "")
-
   return (
     <>
       <div
@@ -40,10 +37,7 @@ function IndexPopup() {
 
           <ContextManager />
 
-          <Config
-            anthropicKey={anthropicKey}
-            setAnthropicKey={setAnthropicKey}
-          />
+          <Config />
         </div>
       </div>
     </>
