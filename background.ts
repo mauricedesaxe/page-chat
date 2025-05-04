@@ -1,3 +1,4 @@
+import type { ContextItem } from "~components/ContextManager"
 import { downloadPage } from "~page-downloader"
 import { extractKeyPoints } from "~summarizer"
 
@@ -49,8 +50,8 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         )
         await chrome.storage.local.set({ context: [] })
       }
-      const context = result.context || []
-      context.push(info.selectionText)
+      const context = result.context || ([] as ContextItem[])
+      context.push({ text: info.selectionText, timestamp: Date.now() })
       await chrome.storage.local.set({ context })
     } catch (error) {
       console.error("Error adding selection to context:", error)
@@ -84,8 +85,8 @@ chrome.commands.onCommand.addListener(async (command) => {
         )
         await chrome.storage.local.set({ context: [] })
       }
-      const context = result.context || []
-      context.push(pageContent)
+      const context = result.context || ([] as ContextItem[])
+      context.push({ text: pageContent, timestamp: Date.now() })
       await chrome.storage.local.set({ context })
     } catch (error) {
       console.error("Error downloading page:", error)

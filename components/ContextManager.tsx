@@ -1,7 +1,7 @@
 import { useStorageSync } from "~hooks/useStorageSync"
 
 export function ContextManager() {
-  const [context, setContext] = useStorageSync("context", [])
+  const [context, setContext] = useStorageSync<ContextItem[]>("context", [])
 
   return (
     <details open>
@@ -22,9 +22,14 @@ export function ContextManager() {
       </summary>
       <ul>
         {context.map((item, index) => (
-          <li key={index}>{item.slice(0, 100)}</li>
+          <li key={index}>{item.text.slice(0, 100)}</li>
         ))}
       </ul>
     </details>
   )
+}
+
+export type ContextItem = {
+  text: string
+  timestamp: number
 }
