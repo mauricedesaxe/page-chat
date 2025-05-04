@@ -9,15 +9,24 @@ import {
   OPENAI_API_KEY
 } from "~utils/storageKeys"
 
+const PRE_MADE_QUERIES = [
+  "ELI5: Break this down like I'm 5",
+  "Debate Devil's Advocate",
+  "Find hidden assumptions",
+  "Translate to plain English",
+  "What's the counterargument?",
+  "Connect to real-world examples",
+  "What questions remain unanswered?"
+]
+
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useStorageSync(LOADING_STATUS_KEY, false)
   const [response, setResponse] = useStorageSync(CURRENT_RESPONSE_KEY, "")
   const [openaiKey] = useStorageSync(OPENAI_API_KEY, "")
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!inputMessage.trim()) return
+  const sendMessage = async (message: string) => {
+    if (!message.trim()) return
 
     setIsLoading(true)
     try {
@@ -33,7 +42,7 @@ export const Chat = () => {
       }
 
       let result: string
-      result = await callOpenAIAPI(inputMessage, contextText, openaiKey)
+      result = await callOpenAIAPI(message, contextText, openaiKey)
       setResponse(result)
     } catch (error) {
       setResponse(`Error: ${error.message}`)
@@ -43,8 +52,35 @@ export const Chat = () => {
     }
   }
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    await sendMessage(inputMessage)
+  }
+
   return (
     <div>
+      {/* Pre-made Queries */}
+      <div
+        style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
+        {PRE_MADE_QUERIES.map((query, index) => (
+          <button
+            key={index}
+            onClick={() => sendMessage(query)}
+            disabled={isLoading}
+            style={{
+              padding: "6px 12px",
+              borderRadius: 16,
+              border: "1px solid #ddd",
+              backgroundColor: "#f5f5f5",
+              fontSize: 14,
+              cursor: isLoading ? "not-allowed" : "pointer",
+              opacity: isLoading ? 0.7 : 1
+            }}>
+            {query}
+          </button>
+        ))}
+      </div>
+
       {/* Chat Input */}
       <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", gap: 8 }}>
