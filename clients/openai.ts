@@ -19,7 +19,9 @@ export async function callOpenAIAPI(message: string) {
   }
 
   const context = await contextModel.safeGetContext()
-  const contextText = context.map((item) => item.text).join("\n\n")
+  const contextText = context
+    .map((item, idx) => `Context item ${idx + 1}:\n\n${item.text}`)
+    .join("\n\n===\n\n")
 
   const client = getOpenAIClient(openaiKey)
   const response = await client.chat.completions.create({
