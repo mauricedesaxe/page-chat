@@ -1,10 +1,11 @@
 import { useState } from "react"
 
 import { useStorageSync } from "~hooks/useStorageSync"
+import { ANTHROPIC_API_KEY } from "~utils/storageKeys"
 
 export const AnthropicKeyConfig = () => {
   const [isVisible, setIsVisible] = useState(false)
-  const [anthropicKey, setAnthropicKey] = useStorageSync("anthropicKey", "")
+  const [anthropicKey, setAnthropicKey] = useStorageSync(ANTHROPIC_API_KEY, "")
 
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newKey = e.target.value

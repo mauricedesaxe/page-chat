@@ -4,14 +4,21 @@ import { callAnthropicAPI } from "~clients/anthropic"
 import { callOpenAIAPI } from "~clients/openai"
 import { useStorageSync } from "~hooks/useStorageSync"
 import { contextModel } from "~models/ContextModel"
+import {
+  AI_PROVIDER_KEY,
+  ANTHROPIC_API_KEY,
+  CURRENT_RESPONSE_KEY,
+  LOADING_STATUS_KEY,
+  OPENAI_API_KEY
+} from "~utils/storageKeys"
 
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("")
-  const [isLoading, setIsLoading] = useStorageSync("isLoading", false)
-  const [response, setResponse] = useStorageSync("currentResponse", "")
-  const [aiProvider, setAiProvider] = useStorageSync("aiProvider", "openai")
-  const [openaiKey] = useStorageSync("openaiKey", "")
-  const [anthropicKey] = useStorageSync("anthropicKey", "")
+  const [isLoading, setIsLoading] = useStorageSync(LOADING_STATUS_KEY, false)
+  const [response, setResponse] = useStorageSync(CURRENT_RESPONSE_KEY, "")
+  const [aiProvider, setAiProvider] = useStorageSync(AI_PROVIDER_KEY, "openai")
+  const [openaiKey] = useStorageSync(OPENAI_API_KEY, "")
+  const [anthropicKey] = useStorageSync(ANTHROPIC_API_KEY, "")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

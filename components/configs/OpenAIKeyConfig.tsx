@@ -1,10 +1,11 @@
 import { useState } from "react"
 
 import { useStorageSync } from "~hooks/useStorageSync"
+import { OPENAI_API_KEY } from "~utils/storageKeys"
 
 export const OpenAIKeyConfig = () => {
   const [isVisible, setIsVisible] = useState(false)
-  const [openaiKey, setOpenaiKey] = useStorageSync("openaiKey", "")
+  const [openaiKey, setOpenaiKey] = useStorageSync(OPENAI_API_KEY, "")
 
   const handleKeyChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newKey = e.target.value

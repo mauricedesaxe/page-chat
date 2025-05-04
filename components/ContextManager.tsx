@@ -1,8 +1,12 @@
 import { useStorageSync } from "~hooks/useStorageSync"
 import { contextModel } from "~models/ContextModel"
+import { CONTEXT_ITEMS_KEY } from "~utils/storageKeys"
 
 export function ContextManager() {
-  const [context, setContext] = useStorageSync<ContextItem[]>("context", [])
+  const [context, setContext] = useStorageSync<ContextItem[]>(
+    CONTEXT_ITEMS_KEY,
+    []
+  )
 
   const handleDelete = async (id: string) => {
     try {

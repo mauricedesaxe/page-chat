@@ -1,8 +1,9 @@
 import type { ContextItem } from "~components/ContextManager"
+import { CONTEXT_ITEMS_KEY } from "~utils/storageKeys"
 
 export class ContextModel {
   async getContext(): Promise<ContextItem[]> {
-    const result = await chrome.storage.local.get("context")
+    const result = await chrome.storage.local.get(CONTEXT_ITEMS_KEY)
     if (!result.context) {
       throw new Error("No context found")
     }
@@ -10,7 +11,7 @@ export class ContextModel {
   }
 
   async safeGetContext(): Promise<ContextItem[]> {
-    const result = await chrome.storage.local.get("context")
+    const result = await chrome.storage.local.get(CONTEXT_ITEMS_KEY)
     if (!result.context) {
       console.log("No context found.")
       await chrome.storage.local.set({ context: [] })
