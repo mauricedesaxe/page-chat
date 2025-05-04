@@ -1,5 +1,5 @@
-import { contextModel } from "~ContextModel"
 import { useStorageSync } from "~hooks/useStorageSync"
+import { contextModel } from "~models/ContextModel"
 
 export function ContextManager() {
   const [context, setContext] = useStorageSync<ContextItem[]>("context", [])

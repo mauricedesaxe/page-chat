@@ -1,4 +1,4 @@
-import { contextModel } from "~ContextModel"
+import { contextModel } from "~models/ContextModel"
 import { downloadPage } from "~page-downloader"
 
 // Set up context menu when extension is installed or updated

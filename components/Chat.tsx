@@ -1,8 +1,8 @@
 import { useState } from "react"
 
 import { callOpenAIAPI, getOpenAIClient } from "~clients/openai"
-import { contextModel } from "~ContextModel"
 import { useStorageSync } from "~hooks/useStorageSync"
+import { contextModel } from "~models/ContextModel"
 
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("")
