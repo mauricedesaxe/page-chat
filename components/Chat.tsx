@@ -23,26 +23,13 @@ export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useStorageSync(LOADING_STATUS_KEY, false)
   const [response, setResponse] = useStorageSync(CURRENT_RESPONSE_KEY, "")
-  const [openaiKey] = useStorageSync(OPENAI_API_KEY, "")
 
   const sendMessage = async (message: string) => {
     if (!message.trim()) return
 
     setIsLoading(true)
     try {
-      const context = await contextModel.safeGetContext()
-      const contextText = context.map((item) => item.text).join("\n\n")
-      if (!contextText) {
-        setResponse(
-          "No context available. Add some text using the right-click menu."
-        )
-        setIsLoading(false)
-        setInputMessage("")
-        return
-      }
-
-      let result: string
-      result = await callOpenAIAPI(message, contextText, openaiKey)
+      const result = await callOpenAIAPI(message)
       setResponse(result)
     } catch (error) {
       setResponse(`Error: ${error.message}`)
