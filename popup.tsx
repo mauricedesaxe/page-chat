@@ -38,6 +38,28 @@ function IndexPopup() {
           <ContextManager />
 
           <Config />
+
+          <button
+            onClick={() => {
+              if (
+                confirm(
+                  "Are you sure you want to clear all data? This action cannot be undone."
+                )
+              ) {
+                chrome.storage.local.clear()
+                alert("All data has been cleared successfully.")
+              }
+            }}
+            style={{
+              padding: "8px 12px",
+              backgroundColor: "#f44336",
+              color: "white",
+              border: "none",
+              borderRadius: 4,
+              cursor: "pointer"
+            }}>
+            Clear All Data
+          </button>
         </div>
       </div>
     </>
