@@ -63,8 +63,9 @@ export function ContextManager() {
                       e.currentTarget.style.backgroundColor = "red"
                     }}
                     onMouseLeave={(e) => {
-                      e.currentTarget.style.color = "#999"
-                      e.currentTarget.style.backgroundColor = "transparent"
+                      e.currentTarget.style.color = "#333"
+                      e.currentTarget.style.backgroundColor =
+                        "rgba(255, 0, 0, 0.1)"
                     }}
                     style={{
                       position: "absolute",
@@ -72,10 +73,10 @@ export function ContextManager() {
                       right: "0",
                       height: "100%",
                       width: "40px",
-                      background: "none",
+                      backgroundColor: "rgba(255, 0, 0, 0.1)",
                       border: "none",
                       cursor: "pointer",
-                      color: "#999",
+                      color: "#333",
                       fontSize: "16px",
                       display: "flex",
                       alignItems: "center",
