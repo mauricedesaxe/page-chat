@@ -1,7 +1,16 @@
+import { contextModel } from "~ContextModel"
 import { useStorageSync } from "~hooks/useStorageSync"
 
 export function ContextManager() {
   const [context, setContext] = useStorageSync<ContextItem[]>("context", [])
+
+  const handleDelete = async (id: string) => {
+    try {
+      await contextModel.deleteItem(id)
+    } catch (error) {
+      console.error("Failed to delete context item:", error)
+    }
+  }
 
   return (
     <details open>
@@ -48,13 +57,7 @@ export function ContextManager() {
                     {new Date(item.timestamp).toLocaleString()}
                   </div>
                   <button
-                    onClick={() => {
-                      const itemId = item.id
-                      const newContext = context.filter(
-                        (item) => item.id !== itemId
-                      )
-                      setContext(newContext)
-                    }}
+                    onClick={() => handleDelete(item.id)}
                     onMouseEnter={(e) => (e.currentTarget.style.color = "red")}
                     onMouseLeave={(e) => (e.currentTarget.style.color = "#999")}
                     style={{
