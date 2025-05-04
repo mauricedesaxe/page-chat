@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { callOpenAIAPI } from "~clients/openai"
 import { useStorageSync } from "~hooks/useStorageSync"
@@ -57,6 +57,15 @@ export const Chat = () => {
     await sendMessage(inputMessage)
   }
 
+  function getTextAreaRows() {
+    const estimatedRows = Math.ceil(inputMessage.length / 40) + 1
+    return estimatedRows
+  }
+
+  function getTextAreaHeight() {
+    return `${getTextAreaRows() * 20}px`
+  }
+
   return (
     <div>
       {/* Pre-made Queries */}
@@ -84,34 +93,51 @@ export const Chat = () => {
       {/* Chat Input */}
       <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", gap: 8 }}>
-          <input
-            type="text"
-            value={inputMessage}
-            onChange={(e) => setInputMessage(e.target.value)}
-            placeholder="Ask about the context..."
+          <div
             style={{
-              flex: 1,
-              padding: "8px 12px",
-              borderRadius: 4,
-              border: "1px solid #ccc",
-              fontSize: 16
-            }}
-          />
-          <button
-            type="submit"
-            disabled={isLoading || !inputMessage.trim()}
-            style={{
-              padding: "8px 16px",
-              borderRadius: 4,
-              border: "1px solid #0066cc",
-              backgroundColor: "#0066cc",
-              color: "white",
-              fontSize: 16,
-              cursor: isLoading ? "not-allowed" : "pointer",
-              opacity: isLoading ? 0.7 : 1
+              display: "flex",
+              flexDirection: "column",
+              width: "100%",
+              gap: 8
             }}>
-            Send
-          </button>
+            <textarea
+              id="chat-input"
+              value={inputMessage}
+              onChange={(e) => setInputMessage(e.target.value)}
+              placeholder="Ask about the context..."
+              style={{
+                flex: 1,
+                padding: "8px 12px",
+                borderRadius: 4,
+                border: "1px solid #ccc",
+                fontSize: 16,
+                height: getTextAreaHeight(),
+                resize: "none",
+                overflow: "hidden",
+                transition: "all 0.3s ease-in-out"
+              }}
+              rows={getTextAreaRows()}
+            />
+            <button
+              type="submit"
+              disabled={isLoading || !inputMessage.trim()}
+              style={{
+                padding: "8px 16px",
+                borderRadius: 4,
+                border: "1px solid #0066cc",
+                backgroundColor: "#0066cc",
+                color: "white",
+                fontSize: 16,
+                width: "100%",
+                marginLeft: "auto",
+                cursor: isLoading ? "not-allowed" : "pointer",
+                opacity: isLoading ? 0.7 : 1,
+                alignSelf: "center",
+                transition: "all 0.3s ease-in-out"
+              }}>
+              Send
+            </button>
+          </div>
         </div>
       </form>
 
