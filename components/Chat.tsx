@@ -1,6 +1,6 @@
 import { useState } from "react"
 
-import { getOpenAIClient } from "~clients/openai"
+import { callOpenAIAPI, getOpenAIClient } from "~clients/openai"
 import { contextModel } from "~ContextModel"
 import { useStorageSync } from "~hooks/useStorageSync"
 
@@ -75,27 +75,6 @@ export const Chat = () => {
       </form>
     </div>
   )
-}
-
-const callOpenAIAPI = async (
-  message: string,
-  context: string,
-  apiKey: string
-) => {
-  const client = getOpenAIClient(apiKey)
-  const response = await client.chat.completions.create({
-    model: "gpt-4o-mini",
-    messages: [
-      {
-        role: "system",
-        content:
-          "You are a helpful in-browser assistant that can answer questions about the context provided, but also generalize when the context is not relevant to the user's query."
-      },
-      { role: "user", content: message + "\n\nContext: " + context }
-    ],
-    max_tokens: 1024
-  })
-  return response.choices[0].message.content
 }
 
 const ResponseDisplay = ({ isLoading, response }) => {
