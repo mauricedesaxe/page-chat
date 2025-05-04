@@ -81,21 +81,7 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   ) {
     try {
       await openPopup()
-
-      const result = await chrome.storage.local.get("context")
-      if (!result.context) {
-        console.log(
-          "No context found, that's fine. We'll start with an empty context."
-        )
-        await chrome.storage.local.set({ context: [] })
-      }
-      const context = result.context || ([] as ContextItem[])
-      context.push({
-        id: crypto.randomUUID(),
-        text: info.selectionText,
-        timestamp: Date.now()
-      })
-      await chrome.storage.local.set({ context })
+      await contextModel.addItem(info.selectionText)
     } catch (error) {
       console.error("Error adding selection to context:", error)
       await chrome.storage.local.set({
@@ -118,23 +104,8 @@ chrome.commands.onCommand.addListener(async (command) => {
       }
 
       await openPopup()
-
       const pageContent = await downloadPage(activeTab.id)
-
-      const result = await chrome.storage.local.get("context")
-      if (!result.context) {
-        console.log(
-          "No context found, that's fine. We'll start with an empty context."
-        )
-        await chrome.storage.local.set({ context: [] })
-      }
-      const context = result.context || ([] as ContextItem[])
-      context.push({
-        id: crypto.randomUUID(),
-        text: pageContent,
-        timestamp: Date.now()
-      })
-      await chrome.storage.local.set({ context })
+      await contextModel.addItem(pageContent)
     } catch (error) {
       console.error("Error downloading page:", error)
       await chrome.storage.local.set({
