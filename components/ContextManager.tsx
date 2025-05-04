@@ -58,17 +58,30 @@ export function ContextManager() {
                   </div>
                   <button
                     onClick={() => handleDelete(item.id)}
-                    onMouseEnter={(e) => (e.currentTarget.style.color = "red")}
-                    onMouseLeave={(e) => (e.currentTarget.style.color = "#999")}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.color = "white"
+                      e.currentTarget.style.backgroundColor = "red"
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.color = "#999"
+                      e.currentTarget.style.backgroundColor = "transparent"
+                    }}
                     style={{
                       position: "absolute",
-                      top: "8px",
-                      right: "8px",
+                      top: "0",
+                      right: "0",
+                      height: "100%",
+                      width: "40px",
                       background: "none",
                       border: "none",
                       cursor: "pointer",
                       color: "#999",
-                      fontSize: "12px"
+                      fontSize: "16px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      borderTopRightRadius: "4px",
+                      borderBottomRightRadius: "4px"
                     }}>
                     ✕
                   </button>
