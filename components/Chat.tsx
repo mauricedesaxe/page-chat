@@ -11,12 +11,7 @@ import {
 
 const PRE_MADE_QUERIES = [
   "ELI5: Break this down like I'm 5",
-  "Debate Devil's Advocate",
-  "Find hidden assumptions",
-  "Translate to plain English",
-  "What's the counterargument?",
-  "Connect to real-world examples",
-  "What questions remain unanswered?"
+  "How are the context items related to each other?"
 ]
 
 export const Chat = () => {
