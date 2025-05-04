@@ -1,4 +1,3 @@
-import { AnthropicKeyConfig } from "./configs/AnthropicKeyConfig"
 import { OpenAIKeyConfig } from "./configs/OpenAIKeyConfig"
 
 export function Config() {
@@ -26,7 +25,6 @@ export function Config() {
           flexDirection: "column",
           gap: 16
         }}>
-        <AnthropicKeyConfig />
         <OpenAIKeyConfig />
         <div
           className="warning"

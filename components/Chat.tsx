@@ -1,12 +1,9 @@
 import { useState } from "react"
 
-import { callAnthropicAPI } from "~clients/anthropic"
 import { callOpenAIAPI } from "~clients/openai"
 import { useStorageSync } from "~hooks/useStorageSync"
 import { contextModel } from "~models/ContextModel"
 import {
-  AI_PROVIDER_KEY,
-  ANTHROPIC_API_KEY,
   CURRENT_RESPONSE_KEY,
   LOADING_STATUS_KEY,
   OPENAI_API_KEY
@@ -16,9 +13,7 @@ export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useStorageSync(LOADING_STATUS_KEY, false)
   const [response, setResponse] = useStorageSync(CURRENT_RESPONSE_KEY, "")
-  const [aiProvider, setAiProvider] = useStorageSync(AI_PROVIDER_KEY, "openai")
   const [openaiKey] = useStorageSync(OPENAI_API_KEY, "")
-  const [anthropicKey] = useStorageSync(ANTHROPIC_API_KEY, "")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -38,11 +33,7 @@ export const Chat = () => {
       }
 
       let result: string
-      if (aiProvider === "openai") {
-        result = await callOpenAIAPI(inputMessage, contextText, openaiKey)
-      } else if (aiProvider === "anthropic") {
-        result = await callAnthropicAPI(inputMessage, contextText, anthropicKey)
-      }
+      result = await callOpenAIAPI(inputMessage, contextText, openaiKey)
       setResponse(result)
     } catch (error) {
       setResponse(`Error: ${error.message}`)
@@ -87,30 +78,6 @@ export const Chat = () => {
           </button>
         </div>
       </form>
-
-      {/* AI Provider */}
-      <div style={{ marginBottom: 16 }}>
-        <label>
-          <input
-            type="radio"
-            name="aiProvider"
-            value="openai"
-            checked={aiProvider === "openai"}
-            onChange={() => setAiProvider("openai")}
-          />
-          OpenAI
-        </label>
-        <label>
-          <input
-            type="radio"
-            name="aiProvider"
-            value="anthropic"
-            checked={aiProvider === "anthropic"}
-            onChange={() => setAiProvider("anthropic")}
-          />
-          Anthropic
-        </label>
-      </div>
 
       <ResponseDisplay isLoading={isLoading} response={response} />
     </div>
