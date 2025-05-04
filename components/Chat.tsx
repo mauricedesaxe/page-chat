@@ -104,6 +104,14 @@ export const Chat = () => {
               id="chat-input"
               value={inputMessage}
               onChange={(e) => setInputMessage(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) {
+                  e.preventDefault()
+                  if (inputMessage.trim()) {
+                    sendMessage(inputMessage)
+                  }
+                }
+              }}
               placeholder="Ask about the context..."
               style={{
                 flex: 1,
