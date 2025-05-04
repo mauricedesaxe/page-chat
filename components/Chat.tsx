@@ -1,6 +1,7 @@
 import { useState } from "react"
 
-import { callOpenAIAPI, getOpenAIClient } from "~clients/openai"
+import { callAnthropicAPI } from "~clients/anthropic"
+import { callOpenAIAPI } from "~clients/openai"
 import { useStorageSync } from "~hooks/useStorageSync"
 import { contextModel } from "~models/ContextModel"
 
@@ -8,7 +9,9 @@ export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useStorageSync("isLoading", false)
   const [response, setResponse] = useStorageSync("currentResponse", "")
+  const [aiProvider, setAiProvider] = useStorageSync("aiProvider", "openai")
   const [openaiKey] = useStorageSync("openaiKey", "")
+  const [anthropicKey] = useStorageSync("anthropicKey", "")
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -27,7 +30,12 @@ export const Chat = () => {
         return
       }
 
-      const result = await callOpenAIAPI(inputMessage, contextText, openaiKey)
+      let result: string
+      if (aiProvider === "openai") {
+        result = await callOpenAIAPI(inputMessage, contextText, openaiKey)
+      } else if (aiProvider === "anthropic") {
+        result = await callAnthropicAPI(inputMessage, contextText, anthropicKey)
+      }
       setResponse(result)
     } catch (error) {
       setResponse(`Error: ${error.message}`)
@@ -39,6 +47,7 @@ export const Chat = () => {
 
   return (
     <div>
+      {/* Chat Input */}
       <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", gap: 8 }}>
           <input
@@ -71,6 +80,31 @@ export const Chat = () => {
           </button>
         </div>
       </form>
+
+      {/* AI Provider */}
+      <div style={{ marginBottom: 16 }}>
+        <label>
+          <input
+            type="radio"
+            name="aiProvider"
+            value="openai"
+            checked={aiProvider === "openai"}
+            onChange={() => setAiProvider("openai")}
+          />
+          OpenAI
+        </label>
+        <label>
+          <input
+            type="radio"
+            name="aiProvider"
+            value="anthropic"
+            checked={aiProvider === "anthropic"}
+            onChange={() => setAiProvider("anthropic")}
+          />
+          Anthropic
+        </label>
+      </div>
+
       <ResponseDisplay isLoading={isLoading} response={response} />
     </div>
   )

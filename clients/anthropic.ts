@@ -20,3 +20,19 @@ export function getAnthropicClient(apiKey: string) {
     }
   })
 }
+
+export async function callAnthropicAPI(
+  message: string,
+  context: string,
+  apiKey: string
+) {
+  const client = getAnthropicClient(apiKey)
+  const response = await client.messages.create({
+    model: "claude-3-5-sonnet-20240620",
+    max_tokens: 1024,
+    messages: [{ role: "user", content: message + "\n\nContext: " + context }]
+  })
+  return response.content[0].type === "text"
+    ? response.content[0].text
+    : "No text response from Anthropic"
+}
