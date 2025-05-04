@@ -47,9 +47,16 @@ export function ContextManager() {
                     backgroundColor: "#f5f5f5",
                     borderRadius: "4px",
                     borderLeft: "3px solid #007bff",
-                    position: "relative"
+                    position: "relative",
+                    paddingRight: "52px"
                   }}>
-                  <div style={{ fontSize: "14px", marginBottom: "4px" }}>
+                  <div
+                    style={{
+                      fontSize: "14px",
+                      marginBottom: "4px",
+                      overflow: "hidden",
+                      textOverflow: "ellipsis"
+                    }}>
                     {item.text.slice(0, 100)}
                     {item.text.length > 100 && "..."}
                   </div>
