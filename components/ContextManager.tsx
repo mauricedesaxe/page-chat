@@ -27,46 +27,48 @@ export function ContextManager() {
           </div>
         ) : (
           <ul style={{ padding: 0, margin: 0, listStyleType: "none" }}>
-            {context.map((item, index) => (
-              <li
-                key={index}
-                style={{
-                  padding: "8px 12px",
-                  margin: "8px 0",
-                  backgroundColor: "#f5f5f5",
-                  borderRadius: "4px",
-                  borderLeft: "3px solid #007bff",
-                  position: "relative"
-                }}>
-                <div style={{ fontSize: "14px", marginBottom: "4px" }}>
-                  {item.text.slice(0, 100)}
-                  {item.text.length > 100 && "..."}
-                </div>
-                <div style={{ fontSize: "12px", color: "#888" }}>
-                  {new Date(item.timestamp).toLocaleString()}
-                </div>
-                <button
-                  onClick={() => {
-                    const newContext = [...context]
-                    newContext.splice(index, 1)
-                    setContext(newContext)
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = "red")}
-                  onMouseLeave={(e) => (e.currentTarget.style.color = "#999")}
+            {[...context]
+              .sort((a, b) => b.timestamp - a.timestamp)
+              .map((item, index) => (
+                <li
+                  key={index}
                   style={{
-                    position: "absolute",
-                    top: "8px",
-                    right: "8px",
-                    background: "none",
-                    border: "none",
-                    cursor: "pointer",
-                    color: "#999",
-                    fontSize: "12px"
+                    padding: "8px 12px",
+                    margin: "8px 0",
+                    backgroundColor: "#f5f5f5",
+                    borderRadius: "4px",
+                    borderLeft: "3px solid #007bff",
+                    position: "relative"
                   }}>
-                  ✕
-                </button>
-              </li>
-            ))}
+                  <div style={{ fontSize: "14px", marginBottom: "4px" }}>
+                    {item.text.slice(0, 100)}
+                    {item.text.length > 100 && "..."}
+                  </div>
+                  <div style={{ fontSize: "12px", color: "#888" }}>
+                    {new Date(item.timestamp).toLocaleString()}
+                  </div>
+                  <button
+                    onClick={() => {
+                      const newContext = [...context]
+                      newContext.splice(index, 1)
+                      setContext(newContext)
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.color = "red")}
+                    onMouseLeave={(e) => (e.currentTarget.style.color = "#999")}
+                    style={{
+                      position: "absolute",
+                      top: "8px",
+                      right: "8px",
+                      background: "none",
+                      border: "none",
+                      cursor: "pointer",
+                      color: "#999",
+                      fontSize: "12px"
+                    }}>
+                    ✕
+                  </button>
+                </li>
+              ))}
           </ul>
         )}
       </div>
