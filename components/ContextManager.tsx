@@ -1,5 +1,5 @@
 import { useStorageSync } from "~hooks/useStorageSync"
-import { contextModel } from "~models/ContextModel"
+import { contextModel, type ContextItem } from "~models/ContextModel"
 import { CONTEXT_ITEMS_KEY } from "~utils/storageKeys"
 
 export function ContextManager() {
@@ -104,10 +104,4 @@ export function ContextManager() {
       </div>
     </details>
   )
-}
-
-export type ContextItem = {
-  id: string
-  text: string
-  timestamp: number
 }

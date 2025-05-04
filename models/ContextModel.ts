@@ -1,5 +1,10 @@
-import type { ContextItem } from "~components/ContextManager"
 import { CONTEXT_ITEMS_KEY } from "~utils/storageKeys"
+
+export type ContextItem = {
+  id: string
+  text: string
+  timestamp: number
+}
 
 export class ContextModel {
   async getContext(): Promise<ContextItem[]> {
