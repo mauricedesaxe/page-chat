@@ -39,9 +39,7 @@ export const Chat = () => {
 
   return (
     <div>
-      <ResponseDisplay isLoading={isLoading} response={response} />
-
-      <form onSubmit={handleSubmit} style={{ marginTop: 16 }}>
+      <form onSubmit={handleSubmit} style={{ marginBottom: 16 }}>
         <div style={{ display: "flex", gap: 8 }}>
           <input
             type="text"
@@ -73,6 +71,7 @@ export const Chat = () => {
           </button>
         </div>
       </form>
+      <ResponseDisplay isLoading={isLoading} response={response} />
     </div>
   )
 }
