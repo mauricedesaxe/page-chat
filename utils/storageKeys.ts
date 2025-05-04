@@ -9,4 +9,4 @@ export const ANTHROPIC_API_KEY = "anthropicKey"
 
 // Content management
 export const CONTEXT_ITEMS_KEY = "context"
-export const CHAT_ITEMS_KEY = "chat"
+export const CHAT_ITEMS_KEY = "chatHistory"
