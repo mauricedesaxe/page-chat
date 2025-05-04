@@ -49,8 +49,10 @@ export function ContextManager() {
                   </div>
                   <button
                     onClick={() => {
-                      const newContext = [...context]
-                      newContext.splice(index, 1)
+                      const itemId = item.id
+                      const newContext = context.filter(
+                        (item) => item.id !== itemId
+                      )
                       setContext(newContext)
                     }}
                     onMouseEnter={(e) => (e.currentTarget.style.color = "red")}
@@ -77,6 +79,7 @@ export function ContextManager() {
 }
 
 export type ContextItem = {
+  id: string
   text: string
   timestamp: number
 }

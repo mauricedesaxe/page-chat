@@ -51,7 +51,11 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
         await chrome.storage.local.set({ context: [] })
       }
       const context = result.context || ([] as ContextItem[])
-      context.push({ text: info.selectionText, timestamp: Date.now() })
+      context.push({
+        id: crypto.randomUUID(),
+        text: info.selectionText,
+        timestamp: Date.now()
+      })
       await chrome.storage.local.set({ context })
     } catch (error) {
       console.error("Error adding selection to context:", error)
@@ -86,7 +90,11 @@ chrome.commands.onCommand.addListener(async (command) => {
         await chrome.storage.local.set({ context: [] })
       }
       const context = result.context || ([] as ContextItem[])
-      context.push({ text: pageContent, timestamp: Date.now() })
+      context.push({
+        id: crypto.randomUUID(),
+        text: pageContent,
+        timestamp: Date.now()
+      })
       await chrome.storage.local.set({ context })
     } catch (error) {
       console.error("Error downloading page:", error)
