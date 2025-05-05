@@ -243,7 +243,7 @@ const ResponseDisplay = ({ isLoading, response, debugInfo }) => {
         <SpinnerStyle />
         <SpinnerAnimation />
         <p>
-          Generating response...
+          Generating response... (do not close the popup)
           <br />
           <span ref={debugTextRef} id="debug-info"></span>
         </p>
