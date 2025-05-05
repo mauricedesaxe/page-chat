@@ -58,6 +58,25 @@ export const Chat = () => {
   const [response, setResponse] = useStorageSync(CURRENT_RESPONSE_KEY, "")
   const [debugInfo, setDebugInfo] = useState("")
 
+  // Check for stale loading state on component mount
+  useEffect(() => {
+    if (isLoading) {
+      chrome.storage.local.get("loadingTimestamp", (result) => {
+        const loadingTimestamp = result.loadingTimestamp || 0
+        const timeElapsed = Date.now() - loadingTimestamp
+
+        // If more than 30 seconds have passed since loading started
+        if (timeElapsed > 30000) {
+          console.warn("Stale loading state detected, resetting")
+          setIsLoading(false)
+          setResponse(
+            "Error: Previous request was interrupted. Please try again."
+          )
+        }
+      })
+    }
+  }, [])
+
   // Reset loading state if stuck for more than 60 seconds
   useEffect(() => {
     let loadingTimer
@@ -75,6 +94,8 @@ export const Chat = () => {
     if (!message.trim()) return
 
     setIsLoading(true)
+    // Store timestamp when loading started
+    chrome.storage.local.set({ loadingTimestamp: Date.now() })
     setDebugInfo("About to call OpenAI API...")
 
     try {
