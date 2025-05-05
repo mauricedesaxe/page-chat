@@ -14,20 +14,55 @@ const PRE_MADE_QUERIES = [
   "How are the context items related to each other?"
 ]
 
+// Add timeout helper for API calls
+const withTimeout = (promise, timeoutMs = 30000) => {
+  let timeoutId
+  const timeoutPromise = new Promise((_, reject) => {
+    timeoutId = setTimeout(() => {
+      reject(new Error(`Request timed out after ${timeoutMs}ms`))
+    }, timeoutMs)
+  })
+
+  return Promise.race([promise, timeoutPromise]).finally(() =>
+    clearTimeout(timeoutId)
+  )
+}
+
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("")
   const [isLoading, setIsLoading] = useStorageSync(LOADING_STATUS_KEY, false)
   const [response, setResponse] = useStorageSync(CURRENT_RESPONSE_KEY, "")
+  const [debugInfo, setDebugInfo] = useState("")
+
+  // Reset loading state if stuck for more than 60 seconds
+  useEffect(() => {
+    let loadingTimer
+    if (isLoading) {
+      loadingTimer = setTimeout(() => {
+        console.warn("Loading state stuck for 60 seconds, auto-resetting")
+        setIsLoading(false)
+        setResponse("Error: Request timed out. Please try again.")
+      }, 60000)
+    }
+    return () => clearTimeout(loadingTimer)
+  }, [isLoading, setIsLoading, setResponse])
 
   const sendMessage = async (message: string) => {
     if (!message.trim()) return
 
     setIsLoading(true)
+    setDebugInfo("About to call OpenAI API...")
+
     try {
-      const result = await callOpenAIAPI(message)
+      console.log("Sending message to OpenAI API:", message)
+      const result = await withTimeout(callOpenAIAPI(message, setDebugInfo))
+      console.log("API response received successfully")
       setResponse(result)
+      setDebugInfo("")
     } catch (error) {
-      setResponse(`Error: ${error.message}`)
+      console.error("API call failed:", error)
+      setResponse(`Error: ${error.message || "Unknown error occurred"}`)
+      setDebugInfo(`API error: ${JSON.stringify(error)}`)
     } finally {
       setIsLoading(false)
       setInputMessage("")
@@ -131,12 +166,16 @@ export const Chat = () => {
         </div>
       </form>
 
-      <ResponseDisplay isLoading={isLoading} response={response} />
+      <ResponseDisplay
+        isLoading={isLoading}
+        response={response}
+        debugInfo={debugInfo}
+      />
     </div>
   )
 }
 
-const ResponseDisplay = ({ isLoading, response }) => {
+const ResponseDisplay = ({ isLoading, response, debugInfo }) => {
   const LoadingSpinner = () => (
     <div
       style={{
@@ -162,7 +201,11 @@ const ResponseDisplay = ({ isLoading, response }) => {
             to { transform: rotate(360deg); }
           }
         `}</style>
-      <p>Generating response...</p>
+      <p>
+        Generating response...
+        <br />
+        {debugInfo ? `${debugInfo}` : ""}
+      </p>
     </div>
   )
 
