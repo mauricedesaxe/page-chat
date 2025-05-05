@@ -28,11 +28,21 @@ export class ContextModel {
   async addItem(text: string): Promise<void> {
     const context = await this.safeGetContext()
     context.push({
-      id: crypto.randomUUID(),
+      id:
+        typeof crypto.randomUUID === "function"
+          ? crypto.randomUUID()
+          : globalThis.crypto?.randomUUID?.() || this.generateFallbackId(),
       text,
       timestamp: Date.now()
     })
     await chrome.storage.local.set({ context })
+  }
+
+  private generateFallbackId(): string {
+    return (
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    )
   }
 
   async deleteItem(id: string): Promise<void> {
