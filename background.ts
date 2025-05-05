@@ -1,5 +1,5 @@
 import { contextModel } from "~models/ContextModel"
-import { downloadPage } from "~page-downloader"
+import { downloadPage } from "~utils/page-downloader"
 
 // Set up context menu when extension is installed or updated
 chrome.runtime.onInstalled.addListener(() => {
