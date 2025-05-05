@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 
 import { callOpenAIAPI } from "~clients/openai"
 import { useStorageSync } from "~hooks/useStorageSync"
@@ -27,6 +27,30 @@ const withTimeout = (promise, timeoutMs = 30000) => {
     clearTimeout(timeoutId)
   )
 }
+
+// Completely separate spinner component defined outside any other component
+const SpinnerAnimation = React.memo(() => (
+  <div
+    style={{
+      display: "inline-block",
+      width: 20,
+      height: 20,
+      border: "2px solid #ccc",
+      borderTopColor: "#333",
+      borderRadius: "50%",
+      animation: "spin 1s linear infinite"
+    }}
+  />
+))
+
+// Style element for animation defined once, outside components
+const SpinnerStyle = () => (
+  <style>{`
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  `}</style>
+)
 
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("")
@@ -176,41 +200,34 @@ export const Chat = () => {
 }
 
 const ResponseDisplay = ({ isLoading, response, debugInfo }) => {
-  const LoadingSpinner = () => (
-    <div
-      style={{
-        padding: 16,
-        backgroundColor: "#f0f0f0",
-        borderRadius: 4,
-        border: "1px solid #ddd",
-        textAlign: "center"
-      }}>
-      <div
-        style={{
-          display: "inline-block",
-          width: 20,
-          height: 20,
-          border: "2px solid #ccc",
-          borderTopColor: "#333",
-          borderRadius: "50%",
-          animation: "spin 1s linear infinite"
-        }}
-      />
-      <style>{`
-          @keyframes spin {
-            to { transform: rotate(360deg); }
-          }
-        `}</style>
-      <p>
-        Generating response...
-        <br />
-        {debugInfo ? `${debugInfo}` : ""}
-      </p>
-    </div>
-  )
+  const debugTextRef = useRef(null)
+
+  // Update debug text via DOM when debugInfo changes
+  useEffect(() => {
+    if (debugTextRef.current) {
+      debugTextRef.current.textContent = debugInfo || ""
+    }
+  }, [debugInfo])
 
   if (isLoading) {
-    return <LoadingSpinner />
+    return (
+      <div
+        style={{
+          padding: 16,
+          backgroundColor: "#f0f0f0",
+          borderRadius: 4,
+          border: "1px solid #ddd",
+          textAlign: "center"
+        }}>
+        <SpinnerStyle />
+        <SpinnerAnimation />
+        <p>
+          Generating response...
+          <br />
+          <span ref={debugTextRef} id="debug-info"></span>
+        </p>
+      </div>
+    )
   }
 
   if (response) {
