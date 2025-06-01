@@ -1,32 +1,11 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useState } from "react"
 
-import { callOpenAIAPI } from "~clients/openai"
-import { useStorageSync } from "~hooks/useStorageSync"
-import { contextModel } from "~models/ContextModel"
-import {
-  CURRENT_RESPONSE_KEY,
-  LOADING_STATUS_KEY,
-  OPENAI_API_KEY
-} from "~utils/storageKeys"
+import { useBackgroundChat } from "~hooks/useBackgroundChat"
 
 const PRE_MADE_QUERIES = [
   "ELI5: Break this down like I'm 5",
   "How are the context items related to each other?"
 ]
-
-// Add timeout helper for API calls
-const withTimeout = (promise, timeoutMs = 30000) => {
-  let timeoutId
-  const timeoutPromise = new Promise((_, reject) => {
-    timeoutId = setTimeout(() => {
-      reject(new Error(`Request timed out after ${timeoutMs}ms`))
-    }, timeoutMs)
-  })
-
-  return Promise.race([promise, timeoutPromise]).finally(() =>
-    clearTimeout(timeoutId)
-  )
-}
 
 // Completely separate spinner component defined outside any other component
 const SpinnerAnimation = React.memo(() => (
@@ -54,69 +33,23 @@ const SpinnerStyle = () => (
 
 export const Chat = () => {
   const [inputMessage, setInputMessage] = useState("")
-  const [isLoading, setIsLoading] = useStorageSync(LOADING_STATUS_KEY, false)
-  const [response, setResponse] = useStorageSync(CURRENT_RESPONSE_KEY, "")
-  const [debugInfo, setDebugInfo] = useState("")
+  const { isLoading, response, error, progress, sendMessage, clearRequest } =
+    useBackgroundChat()
 
-  // Check for stale loading state on component mount
-  useEffect(() => {
-    if (isLoading) {
-      chrome.storage.local.get("loadingTimestamp", (result) => {
-        const loadingTimestamp = result.loadingTimestamp || 0
-        const timeElapsed = Date.now() - loadingTimestamp
-
-        // If more than 30 seconds have passed since loading started
-        if (timeElapsed > 30000) {
-          console.warn("Stale loading state detected, resetting")
-          setIsLoading(false)
-          setResponse(
-            "Error: Previous request was interrupted. Please try again."
-          )
-        }
-      })
-    }
-  }, [])
-
-  // Reset loading state if stuck for more than 60 seconds
-  useEffect(() => {
-    let loadingTimer
-    if (isLoading) {
-      loadingTimer = setTimeout(() => {
-        console.warn("Loading state stuck for 60 seconds, auto-resetting")
-        setIsLoading(false)
-        setResponse("Error: Request timed out. Please try again.")
-      }, 60000)
-    }
-    return () => clearTimeout(loadingTimer)
-  }, [isLoading, setIsLoading, setResponse])
-
-  const sendMessage = async (message: string) => {
+  const handleSendMessage = async (message: string) => {
     if (!message.trim()) return
 
-    setIsLoading(true)
-    // Store timestamp when loading started
-    chrome.storage.local.set({ loadingTimestamp: Date.now() })
-    setDebugInfo("About to call OpenAI API...")
-
     try {
-      console.log("Sending message to OpenAI API:", message)
-      const result = await withTimeout(callOpenAIAPI(message, setDebugInfo))
-      console.log("API response received successfully")
-      setResponse(result)
-      setDebugInfo("")
-    } catch (error) {
-      console.error("API call failed:", error)
-      setResponse(`Error: ${error.message || "Unknown error occurred"}`)
-      setDebugInfo(`API error: ${JSON.stringify(error)}`)
-    } finally {
-      setIsLoading(false)
+      await sendMessage(message)
       setInputMessage("")
+    } catch (error) {
+      console.error("Failed to send message:", error)
     }
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    await sendMessage(inputMessage)
+    await handleSendMessage(inputMessage)
   }
 
   function getTextAreaRows() {
@@ -136,7 +69,7 @@ export const Chat = () => {
         {PRE_MADE_QUERIES.map((query, index) => (
           <button
             key={index}
-            onClick={() => sendMessage(query)}
+            onClick={() => handleSendMessage(query)}
             disabled={isLoading}
             style={{
               padding: "6px 12px",
@@ -170,7 +103,7 @@ export const Chat = () => {
                 if (e.key === "Enter" && !e.shiftKey) {
                   e.preventDefault()
                   if (inputMessage.trim()) {
-                    sendMessage(inputMessage)
+                    handleSendMessage(inputMessage)
                   }
                 }
               }}
@@ -214,22 +147,15 @@ export const Chat = () => {
       <ResponseDisplay
         isLoading={isLoading}
         response={response}
-        debugInfo={debugInfo}
+        error={error}
+        progress={progress}
+        onClear={clearRequest}
       />
     </div>
   )
 }
 
-const ResponseDisplay = ({ isLoading, response, debugInfo }) => {
-  const debugTextRef = useRef(null)
-
-  // Update debug text via DOM when debugInfo changes
-  useEffect(() => {
-    if (debugTextRef.current) {
-      debugTextRef.current.textContent = debugInfo || ""
-    }
-  }, [debugInfo])
-
+const ResponseDisplay = ({ isLoading, response, error, progress, onClear }) => {
   if (isLoading) {
     return (
       <div
@@ -243,10 +169,48 @@ const ResponseDisplay = ({ isLoading, response, debugInfo }) => {
         <SpinnerStyle />
         <SpinnerAnimation />
         <p>
-          Generating response... (do not close the popup)
-          <br />
-          <span ref={debugTextRef} id="debug-info"></span>
+          Generating response...
+          {progress && (
+            <>
+              <br />
+              <span style={{ fontSize: 14, color: "#666" }}>{progress}</span>
+            </>
+          )}
         </p>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div
+        style={{
+          padding: 16,
+          backgroundColor: "#fee",
+          borderRadius: 4,
+          border: "1px solid #fcc",
+          color: "#c00"
+        }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center"
+          }}>
+          <h3>Error</h3>
+          <button
+            onClick={onClear}
+            style={{
+              padding: "4px 8px",
+              borderRadius: 4,
+              border: "1px solid #ccc",
+              backgroundColor: "#fff",
+              cursor: "pointer"
+            }}>
+            Clear
+          </button>
+        </div>
+        <p style={{ fontSize: 16, lineHeight: 1.5 }}>{error}</p>
       </div>
     )
   }
@@ -268,9 +232,7 @@ const ResponseDisplay = ({ isLoading, response, debugInfo }) => {
           }}>
           <h3>Response</h3>
           <button
-            onClick={() => {
-              chrome.storage.local.remove("currentResponse")
-            }}
+            onClick={onClear}
             style={{
               padding: "4px 8px",
               borderRadius: 4,
